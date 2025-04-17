@@ -9,7 +9,7 @@ const size = 300
 const initiallength = 200
 const snakePositionList = []
 const snakeWidth = 5
-const snakeSpeed =3 
+const snakeSpeed = 2
 let angle = -90
 let move = 0
 
@@ -61,13 +61,12 @@ const render = () => {
         
     }
 }
-// html 側の id = canvas が id = canvasjk になってて,
-// 全然出てこなかったという悲劇
+
 const collisionCheck = () => {
     const data = ctx.getImageData(0,0,size,size).data
-    const tx = mx + Math.cos(angle / 180 * Math.PI) * (snakeWidth + 4)
-    const ty = my + Math.sin(angle / 180 * Math.PI) * ( snakeWidth + 4 )
-    const pix = data[tx*4+ty*4*size+1]
+    const tx = mx + Math.cos(angle / 180 * Math.PI) * (snakeWidth + 2)
+    const ty = my + Math.sin(angle / 180 * Math.PI) * ( snakeWidth + 2 )
+    const pix = data[Math.trunc( tx )*4+Math.trunc( ty )*4*size+1]
 
     if( mx - snakeWidth  < 0 || size < snakeWidth + mx || my - snakeWidth  < 0 || size < snakeWidth + my ){
         return true
@@ -80,7 +79,7 @@ const collisionCheck = () => {
 }
 
 const update = () => {
-    angle += move * 2
+    angle += move * 5
     mx += Math.cos(angle * Math.PI / 180) * snakeSpeed
     my += Math.sin(angle * Math.PI / 180) * snakeSpeed
 
