@@ -7,12 +7,12 @@
     <script src="main.js"></script>
 <body>
     <div style="position:relative; height:  300px; width: 300px;">
-        <canvas height="300px", width="300px", id="canvas"></canvas>
+        <canvas height="300px" width="300px" id="canvas"></canvas>
     </div>
     <div style="position:relative; height: 90px; width: 300px;">
         <!-- backgoround-color に間違ってクォーテーションをつけたので色が出てこないミスがあった．-->
-        <div style="position:absolute; top:0; left:0; height:90px; width:150px; background-color: #0ff"></div>
-        <div style="position:absolute; top:0; left:150px; height:90px; width:150px; background-color: #ff0"></div>
+        <div id='left' style="position:absolute; top:0; left:0; height:90px; width:150px; background-color: #0ff"></div>
+        <div id='right' style="position:absolute; top:0; left:150px; height:90px; width:150px; background-color: #ff0"></div>
     </div>
 </body>
 </html>

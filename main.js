@@ -5,11 +5,12 @@
 let ctx = null
 
 const size = 300
-const initiallength = 150
+const initiallength = 500
 const snakePositionList = []
 const snakeWidth = 5
-const snakeSpeed = 3
-let angle = 0
+const snakeSpeed = 0.5
+let angle = -90 
+let move = 0
 
 let mx = size / 2;
 let my = size / 2;
@@ -20,6 +21,22 @@ const init = () => {
 
     for (let i = 0; i < initiallength; i++) {
         snakePositionList.push([mx, my])
+    }
+
+    document.getElementById('left').onpointerdown = (e) =>{
+        e.preventDefault()
+        move = -1
+    }
+
+    document.getElementById('right').onpointerdown = (e) =>{
+        e.preventDefault()
+        console.log('left');
+        move = 1
+    }
+
+    document.onpointerup = (e) =>{
+        e.preventDefault()
+        move = 0 
     }
 };
 
@@ -38,12 +55,14 @@ const render = () => {
 // html 側の id = canvas が id = canvasjk になってて,
 // 全然出てこなかったという悲劇
 
+
 const update = () => {
-    angle += 2
+    angle += move * 2
     mx += Math.cos(angle * Math.PI / 180) * snakeSpeed
     my += Math.sin(angle * Math.PI / 180) * snakeSpeed
 
-    console.log(mx, my);
+    console.log(move);
+    console.log(angle)
     snakePositionList.push([mx,my])
     snakePositionList.shift()
 }
