@@ -3,13 +3,14 @@
 3 */
 
 let ctx = null
+let gameover = false
 
 const size = 300
-const initiallength = 500
+const initiallength = 200
 const snakePositionList = []
 const snakeWidth = 5
 const snakeSpeed = 0.5
-let angle = -90 
+let angle = -90
 let move = 0
 
 let mx = size / 2;
@@ -23,20 +24,20 @@ const init = () => {
         snakePositionList.push([mx, my])
     }
 
-    document.getElementById('left').onpointerdown = (e) =>{
+    document.getElementById('left').onpointerdown = (e) => {
         e.preventDefault()
         move = -1
     }
 
-    document.getElementById('right').onpointerdown = (e) =>{
+    document.getElementById('right').onpointerdown = (e) => {
         e.preventDefault()
         console.log('left');
         move = 1
     }
 
-    document.onpointerup = (e) =>{
+    document.onpointerup = (e) => {
         e.preventDefault()
-        move = 0 
+        move = 0
     }
 };
 
@@ -50,11 +51,24 @@ const render = () => {
         ctx.beginPath()
         ctx.arc(x, y, snakeWidth, 0, Math.PI * 2)
         ctx.fill()
+        if(collisionCheck()){
+            console.log('hit!!');
+            gameover = true
+        }
+        if(gameover){
+            ctx.fillStyle = '#f00'
+        }
     }
 }
 // html 側の id = canvas が id = canvasjk になってて,
 // 全然出てこなかったという悲劇
-
+const collisionCheck = () => {
+    if( mx - snakeWidth  < 0 || size < snakeWidth + mx || my - snakeWidth  < 0 || size < snakeWidth + my ){
+        return true
+    }else{
+        return false
+    }
+}
 
 const update = () => {
     angle += move * 2
@@ -63,11 +77,11 @@ const update = () => {
 
     console.log(move);
     console.log(angle)
-    snakePositionList.push([mx,my])
+    snakePositionList.push([mx, my])
     snakePositionList.shift()
 }
 
-window.onload = async() => {
+window.onload = async () => {
     init()
     while (true) {
         render()
