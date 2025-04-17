@@ -64,9 +64,19 @@ const render = () => {
 // html 側の id = canvas が id = canvasjk になってて,
 // 全然出てこなかったという悲劇
 const collisionCheck = () => {
+    const data = ctx.getImageData(0,0,size,size).data
+    const tx = mx + Math.cos(angle / 180 * Math.PI) * (snakeSpeed + 1)
+    const ty = my + Math.sin(angle / 180 * Math.PI) * ( snakeSpeed + 1 )
+    console.log('m', mx*4+my*4*size+1);
+    console.log(tx*4+ty*4*size+1);
+    const pix = data[mx*4+my*4*size+1]
+    console.log(pix);
+
+
     if( mx - snakeWidth  < 0 || size < snakeWidth + mx || my - snakeWidth  < 0 || size < snakeWidth + my ){
         return true
-    }else if(ImageData.data[my+ mx*4+1] !== 0){
+    // mx とかがそのままだと，最初に生成した瞬間に死んでしまうので良くない
+    }else if(pix != 0){
         return true
     }else{
         return false
@@ -90,5 +100,8 @@ window.onload = async () => {
         render()
         update()
         await new Promise((r) => setTimeout(r, 10));
+        if (gameover) {
+            return
+        }
     }
 };
