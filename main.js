@@ -58,12 +58,15 @@ const render = () => {
         if(gameover){
             ctx.fillStyle = '#f00'
         }
+        
     }
 }
 // html 側の id = canvas が id = canvasjk になってて,
 // 全然出てこなかったという悲劇
 const collisionCheck = () => {
     if( mx - snakeWidth  < 0 || size < snakeWidth + mx || my - snakeWidth  < 0 || size < snakeWidth + my ){
+        return true
+    }else if(ImageData.data[my+ mx*4+1] !== 0){
         return true
     }else{
         return false
