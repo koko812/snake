@@ -4,13 +4,16 @@
 
 let ctx = null
 let gameover = false
+let score = 0
+let dscore = 1
+let ddscore = 1
 
 const size = 300
-const initiallength = 200
+const initiallength = 50
 const snakePositionList = []
-const extentionLength = 50 
+const extentionLength = 100 
 const snakeWidth = 5
-const snakeSpeed = 1
+let snakeSpeed = 0.8
 let angle = -90
 let move = 0
 
@@ -53,21 +56,56 @@ const render = () => {
         if (gameover) {
             ctx.fillStyle = '#f00'
         } else {
-            ctx.fillStyle = `hsl(${i}deg, 100%,50%)` 
+            ctx.fillStyle = `hsl(${120 - ( snakePositionList.length - i )*2}deg, 100%,50%)` 
         }
+        // とてもいい感じに進められている
+        // あとは，目をつけるのと，スコア表示だねえ
+        // その辺も全然慣れていないので難しそうなんだが，今後のゲームにはすごく生きてきそう
+        // 故に実装の練習をしておきたい,という話が存在している
+        // とは言え，なんで，length から引き算をしたら，色の頭が固定されるというのかが，
+        // いまいちわかってない説がある 
+        // ので，その辺は後でもいいから理解しておきたい説がある
             
+        // やっぱり，shiftは 頭を消してるらしいので，（配列の）
+        // けつから描画してるっぽい，まあだとしたら，＾の描画の仕組みは納得いく
+        // で， mx, my もどんどんけつに追加していってるので，やり方としては正しいのがわかる
+        // まあなんで逆に処理して言ってるのかは謎なんだけど，多分， shift とか unshift を使いたいからなんだろうと思っとこう
+        // つまるところ，mx,my の座標は戦闘（蛇の）を示していると考えるのは正しい
+
         const [x,y] = snakePositionList[i]
-        console.log(x,y);
         ctx.beginPath()
         ctx.arc(x, y, snakeWidth, 0, Math.PI * 2)
         ctx.fill()
+        
+        const lex = mx + Math.cos(( angle - 60 )/180 * Math.PI) * (snakeWidth * 0.6)
+        const ley = my + Math.sin(( angle - 60 )/180 * Math.PI) * (snakeWidth * 0.6)
+        ctx.fillStyle = "#fff"
+        ctx.beginPath()
+        ctx.arc(lex, ley, snakeWidth*0.5, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = "#000"
+        ctx.beginPath()
+        ctx.arc(lex, ley, snakeWidth*0.3, 0, Math.PI * 2)
+        ctx.fill()
 
+        const rex = mx + Math.cos(( angle + 60 )/180 * Math.PI) * (snakeWidth * 0.6)
+        const rey = my + Math.sin(( angle + 60 )/180 * Math.PI) * (snakeWidth * 0.6)
+        ctx.fillStyle = "#fff"
+        ctx.beginPath()
+        ctx.arc(rex, rey, snakeWidth*0.5, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = "#000"
+        ctx.beginPath()
+        ctx.arc(rex, rey, snakeWidth*0.3, 0, Math.PI * 2)
+        ctx.fill()
     }
 
     ctx.fillStyle = `hsl(${Math.random()*360}deg, 100%, 50%)`
     ctx.beginPath()
     ctx.arc(fx, fy, snakeWidth, 0, Math.PI*2)
     ctx.fill()
+
+    document.getElementById('score').textContent = `Score: ${score}`
 }
 
 const collisionCheck = () => {
@@ -94,10 +132,29 @@ const collisionCheck = () => {
         // あとは色の変化なんだけど，そこの処理が普通にややこしそうでちょっとだけ萎えてる
         // 多分 render のところをいじるだけって話なんだろうけどね
 
+        // だいぶといい感じに実装が進んできた
+        // あとやるべきは，まあスコア表示は当たり前なんだけど，
+        // 伸びる時に効果音があれば面白いかもなとかちょっと思ったかもしれない
+
+        // 再起動したら，かなり動きの速さが戻ったのでいいと思う
+        // が，これ遅くなるたびに再起動したりするのは面倒すぎるので，どうにかならんもんか
+        // あと，キーボード操作も追加しないとね，
+        // なかなかに，過去最高級のクオリティにはなっている気がする
+        // これを python の pyxel みたいなやつでも同じように実装できれば
+        // 嬉しいという話だよな,普通に４方向移動だと，ゲーム性的に難しくなりそうで，
+        // そこに関してもちょっとだけ興味がある
+
+        // こんだけコメントがガンガン残るのはみづらいので，やっぱり dev ブランチは作ったほうがいいかもしれない
+
         const lastPos = snakePositionList[0]
         for(let i = 0; i < extentionLength; i++){
             snakePositionList.unshift(lastPos)
         }
+        score += 50
+        dscore += ddscore;
+        ddscore ++;
+        snakeSpeed += 0.1
+        // 蛇のスピードが上がっていくのも楽しいかもしれない
         return
     }
 
@@ -128,7 +185,12 @@ const update = () => {
 
 window.onload = async () => {
     init()
+    let cnt = 0
     while (true) {
+        cnt ++;
+        if(cnt%10 == 0){
+            score+=dscore;
+        }
         if (fx === 0){
             fx = Math.random()*(size-snakeWidth*2) + snakeWidth;
             fy = Math.random()*(size-snakeWidth*2) + snakeWidth;
