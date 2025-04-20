@@ -16,6 +16,9 @@ let move = 0
 let mx = size / 2;
 let my = size / 2;
 
+let fx = 0;
+let fy = 0;
+
 const init = () => {
     const canvas = document.getElementById('canvas')
     ctx = canvas.getContext('2d')
@@ -45,35 +48,38 @@ const render = () => {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, size, size)
 
-    ctx.fillStyle = '#0f0'
+    if (gameover) {
+        ctx.fillStyle = '#f00'
+    } else {
+
+        ctx.fillStyle = '#0f0'
+    }
     for (const pos of snakePositionList) {
         const [x, y] = pos
         ctx.beginPath()
         ctx.arc(x, y, snakeWidth, 0, Math.PI * 2)
         ctx.fill()
-        if(collisionCheck()){
-            console.log('hit!!');
-            gameover = true
-        }
-        if(gameover){
-            ctx.fillStyle = '#f00'
-        }
-        
+
     }
+
+    ctx.fillStyle = `hsl(${Math.random()*360}deg, 100%, 50%)`
+    ctx.beginPath()
+    ctx.arc(fx, fy, snakeWidth, 0, Math.PI)
+    ctx.fill()
 }
 
 const collisionCheck = () => {
-    const data = ctx.getImageData(0,0,size,size).data
+    const data = ctx.getImageData(0, 0, size, size).data
     const tx = mx + Math.cos(angle / 180 * Math.PI) * (snakeWidth + 2)
-    const ty = my + Math.sin(angle / 180 * Math.PI) * ( snakeWidth + 2 )
-    const pix = data[Math.trunc( tx )*4+Math.trunc( ty )*4*size+1]
+    const ty = my + Math.sin(angle / 180 * Math.PI) * (snakeWidth + 2)
+    const pix = data[Math.trunc(tx) * 4 + Math.trunc(ty) * 4 * size + 1]
 
-    if( mx - snakeWidth  < 0 || size < snakeWidth + mx || my - snakeWidth  < 0 || size < snakeWidth + my ){
+    if (mx - snakeWidth < 0 || size < snakeWidth + mx || my - snakeWidth < 0 || size < snakeWidth + my) {
         return true
-    // mx とかがそのままだと，最初に生成した瞬間に死んでしまうので良くない
-    }else if(pix != 0){
+        // mx とかがそのままだと，最初に生成した瞬間に死んでしまうので良くない
+    } else if (pix != 0) {
         return true
-    }else{
+    } else {
         return false
     }
 }
@@ -87,13 +93,19 @@ const update = () => {
     console.log(angle)
     snakePositionList.push([mx, my])
     snakePositionList.shift()
+    if (collisionCheck()) {
+        console.log('hit!!');
+        gameover = true
+    }
 }
 
 window.onload = async () => {
     init()
     while (true) {
-        render()
+        fx = Math.random()*(size-snakeWidth*2) + snakeWidth;
+        fy = Math.random()*(size-snakeWidth*2) + snakeWidth;
         update()
+        render()
         await new Promise((r) => setTimeout(r, 10));
         if (gameover) {
             return
