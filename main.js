@@ -64,7 +64,7 @@ const render = () => {
 
     ctx.fillStyle = `hsl(${Math.random()*360}deg, 100%, 50%)`
     ctx.beginPath()
-    ctx.arc(fx, fy, snakeWidth, 0, Math.PI)
+    ctx.arc(fx, fy, snakeWidth, 0, Math.PI*2)
     ctx.fill()
 }
 
@@ -102,8 +102,10 @@ const update = () => {
 window.onload = async () => {
     init()
     while (true) {
-        fx = Math.random()*(size-snakeWidth*2) + snakeWidth;
-        fy = Math.random()*(size-snakeWidth*2) + snakeWidth;
+        if (fx === 0){
+            fx = Math.random()*(size-snakeWidth*2) + snakeWidth;
+            fy = Math.random()*(size-snakeWidth*2) + snakeWidth;
+        }
         update()
         render()
         await new Promise((r) => setTimeout(r, 10));
