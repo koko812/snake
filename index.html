@@ -6,6 +6,12 @@
     <title>Document</title>
     <script src="main.js"></script>
 <body>
+	<!--- なんでここの position 指定が relative なのかわかっていない -->
+	<!--- Score は後付けなので，操作ボタンと表示画面がいい感じに表示されるためにつけてるんだけど -->
+	<!--- まあでも，relative をつけて，ちゃんと縦に並んで出てきてるという動作は納得がいく -->
+	<!--- 普通に，absolute でそれぞれ指定する手間を省けるというだけな気はする -->
+	<!--- テトリスとかの，実装をまたきちんと読み解く必要は絶対にある，再実装する気になったら読んでみよう -->
+	
     <div style="position:relative; width: 300px", id="score"></div>
     <div style="position:relative; height:  300px; width: 300px;">
         <canvas height="300px" width="300px" id="canvas"></canvas>
