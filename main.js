@@ -49,14 +49,15 @@ const render = () => {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, size, size)
 
-    if (gameover) {
-        ctx.fillStyle = '#f00'
-    } else {
-
-        ctx.fillStyle = '#0f0'
-    }
-    for (const pos of snakePositionList) {
-        const [x, y] = pos
+    for(let i = 0; i < snakePositionList.length; i++){
+        if (gameover) {
+            ctx.fillStyle = '#f00'
+        } else {
+            ctx.fillStyle = `hsl(${i}deg, 100%,50%)` 
+        }
+            
+        const [x,y] = snakePositionList[i]
+        console.log(x,y);
         ctx.beginPath()
         ctx.arc(x, y, snakeWidth, 0, Math.PI * 2)
         ctx.fill()
